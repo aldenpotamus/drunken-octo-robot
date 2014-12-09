@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -13,44 +18,16 @@ import android.util.Log;
  * helper methods.
  */
 public class NotificationIntentService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.example.aldenroberts.testproject.action.FOO";
-    private static final String ACTION_BAZ = "com.example.aldenroberts.testproject.action.BAZ";
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.example.aldenroberts.testproject.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.example.aldenroberts.testproject.extra.PARAM2";
+    private static final String BRENTS_ACCOUNT_NAME = "smithbrent@google.com";
+    private static final String BRENTS_LDAP = "smithbrent";
+    private static final Integer BRENTS_CALENDAR_ID = 126;
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, NotificationIntentService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
+    // Add an office to the appropriate calendar.
+    private static final String ACTION_ADD_OFFICE_EVENT = "com.example.aldenroberts.testproject.action.ADD_OFFICE_EVENT";
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, NotificationIntentService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
+    // Parameters
+    private static final String PARAM_OFFICE_NAME = "com.example.aldenroberts.testproject.extra.PARAM_OFFICE_NAME";
 
     public NotificationIntentService() {
         super("NotificationIntentService");
@@ -58,37 +35,41 @@ public class NotificationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d("TAG", "You're in SFO?!?!");
+        Log.d("TAG", "onHandleIntent()");
 
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+            String action = intent.getAction();
+
+            // XXX: delete this when we actually pass this.
+            action = ACTION_ADD_OFFICE_EVENT;
+
+            if (ACTION_ADD_OFFICE_EVENT.equals(action)) {
+
+                // The office the user chose.
+                String officeName = intent.getStringExtra(PARAM_OFFICE_NAME);
+
+                // XXX: delete this when we actually pass this.
+                officeName = "SFO";
+
+                String title = BRENTS_LDAP + " @ " + officeName;
+
+                CalendarEvent newEvent = CalendarEvent.createAllDayEvent(
+                        BRENTS_CALENDAR_ID, title);
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS");
+                Log.d("TAG", "dtStart = " + df.format(new Date(newEvent.getDtStart())));
+                Log.d("TAG", "dtEnd = " + df.format(new Date(newEvent.getDtEnd())));
+
+                String eventId = CalendarUtil.addEvent(NotificationIntentService.this, newEvent);
+
+                Log.d("TAG", "Added " + title + " to calendar (eventId = " + eventId + " )");
+
+
+            } else  {
+                Log.d("TAG", "Unrecognized Action You Jerk!");
             }
         }
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 }
