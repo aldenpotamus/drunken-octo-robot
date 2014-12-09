@@ -2,7 +2,10 @@ package com.example.aldenroberts.testproject;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -12,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RemoteViews;
 
 import java.util.Calendar;
 
@@ -40,13 +44,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d(TAG,"Fire Zee Notifications!");
 
-                //MainNotification nm = new MainNotification();
+                RemoteViews remoteViews = new RemoteViews(getPackageName(),
+                                                          R.layout.notification);
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(MainActivity.this)
-                                .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle("My notification")
-                                .setContentText("Hello World!");
+                                  .setContent(remoteViews)
+                                  .setSmallIcon(R.drawable.ic_launcher);
+
+                Intent buttonsIntent = new Intent(MainActivity.this, NotificationIntentService.class);
+                remoteViews.setOnClickPendingIntent(R.id.notification_button1, PendingIntent.getService(MainActivity.this, 0, buttonsIntent, 0));
 
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
