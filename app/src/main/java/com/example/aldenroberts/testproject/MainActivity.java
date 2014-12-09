@@ -20,12 +20,14 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
+    private ArrayAdapter<String> locationsAdapter;
 
     private static final String TAG = "MyActivity";
 
@@ -41,6 +43,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        locationsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+
         buttonConfig();
     }
 
@@ -53,6 +57,24 @@ public class MainActivity extends Activity {
                 RemoteViews remoteViews = new RemoteViews(getPackageName(),
                                                           R.layout.notification);
 
+                //for(int i = 0; i < locationsAdapter.getCount(); i++) {
+                    //Button locButton = new Button(MainActivity.this);
+                    //locButton.setText(locationsAdapter.getItem(i));
+
+                    //Log.d("TAG", locationsAdapter.getItem(i));
+
+                    //RemoteViews remoteViewButton = new RemoteViews(getPackageName(),
+                    //                                               R.layout.button);
+                    //remoteViews.addView(R.id.notificationButtonList, remoteViewButton);
+
+                       remoteViews.setTextViewText(R.id.notification_button1, "1");
+
+//                    remoteViews.setString(R.id.notification_button1, "setText", "1");
+//                    remoteViews.setString(R.id.notification_button2, "setText", "2");
+//                    remoteViews.setString(R.id.notification_button3, "setText", "3");
+//                    remoteViews.setString(R.id.notification_button4, "setText", "4");
+                //}
+
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(MainActivity.this)
                                   .setContent(remoteViews)
@@ -63,14 +85,13 @@ public class MainActivity extends Activity {
 
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
                 mNotificationManager.notify(1, mBuilder.build());
             }
         });
 
-        final ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
-
         ListView listView = (ListView) findViewById(R.id.locationListView);
-        listView.setAdapter(itemsAdapter);
+        listView.setAdapter(locationsAdapter);
 
         final Button addLocationButton = (Button) findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +108,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         locationText = input.getText().toString();
-                        itemsAdapter.add(locationText);
+                        locationsAdapter.add(locationText);
                         dialog.dismiss();
                     }
                 });
@@ -97,7 +118,6 @@ public class MainActivity extends Activity {
                         dialog.cancel();
                     }
                 });
-
 
                 AlertDialog dialog = builder.show();
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
