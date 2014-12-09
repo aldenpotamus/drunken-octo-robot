@@ -57,23 +57,10 @@ public class MainActivity extends Activity {
                 RemoteViews remoteViews = new RemoteViews(getPackageName(),
                                                           R.layout.notification);
 
-                //for(int i = 0; i < locationsAdapter.getCount(); i++) {
-                    //Button locButton = new Button(MainActivity.this);
-                    //locButton.setText(locationsAdapter.getItem(i));
-
-                    //Log.d("TAG", locationsAdapter.getItem(i));
-
-                    //RemoteViews remoteViewButton = new RemoteViews(getPackageName(),
-                    //                                               R.layout.button);
-                    //remoteViews.addView(R.id.notificationButtonList, remoteViewButton);
-
-                       remoteViews.setTextViewText(R.id.notification_button1, "1");
-
-//                    remoteViews.setString(R.id.notification_button1, "setText", "1");
-//                    remoteViews.setString(R.id.notification_button2, "setText", "2");
-//                    remoteViews.setString(R.id.notification_button3, "setText", "3");
-//                    remoteViews.setString(R.id.notification_button4, "setText", "4");
-                //}
+                remoteViews.setTextViewText(R.id.notification_button1, locationsAdapter.getCount() > 0 ? locationsAdapter.getItem(0) : "");
+                remoteViews.setTextViewText(R.id.notification_button2, locationsAdapter.getCount() > 1 ? locationsAdapter.getItem(1) : "");
+                remoteViews.setTextViewText(R.id.notification_button3, locationsAdapter.getCount() > 2 ? locationsAdapter.getItem(2) : "");
+                remoteViews.setTextViewText(R.id.notification_button4, "...");
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(MainActivity.this)

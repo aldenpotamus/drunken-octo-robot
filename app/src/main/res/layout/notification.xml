@@ -9,26 +9,30 @@
 
     <Button
         android:id="@+id/notification_button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="X"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_width="0dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Y"
-        android:id="@+id/notification_button2" />
+        android:id="@+id/notification_button2"
+        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_width="0dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Z"
-        android:id="@+id/notification_button3" />
+        android:id="@+id/notification_button3"
+        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_width="0dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="..."
-        android:id="@+id/notification_button4" />
+        android:id="@+id/notification_button4"
+        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        android:layout_width="0dp" />
 </LinearLayout>
