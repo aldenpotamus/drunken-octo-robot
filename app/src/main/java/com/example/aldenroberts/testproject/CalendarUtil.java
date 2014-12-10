@@ -42,6 +42,16 @@ public class CalendarUtil {
         return cals;
     }
 
+    public static int getCalendarIdByName(String calName, Context ctxt) {
+        List<Calendar> calendars = CalendarUtil.listCalendars(ctxt);
+
+        for(int i = 0; i < calendars.size(); i++)
+            if(calendars.get(i).getDisplayName().equals(calName))
+                return calendars.get(i).getId();
+
+        return -1;
+    }
+
     public static String addEvent(Context ctxt, CalendarEvent event) {
         ContentResolver cr = ctxt.getContentResolver();
         ContentValues values = new ContentValues();
