@@ -264,6 +264,7 @@ public class MainActivity extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Log.d("TAG", "SEEK BAR STOPPED: " + seekBar.getProgress());
                 setReminderTimePref(seekBar.getProgress());
+                CalendarNotificationManager.getInstance().scheduleNotificationAtHour(seekBar.getProgress(), MainActivity.this.getApplicationContext());
             }
         });
     }

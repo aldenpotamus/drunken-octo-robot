@@ -28,7 +28,7 @@
         </service>
 
         <receiver android:name=".NotificationReceiver"
-            android:enabled="false">
+            android:enabled="true">
         </receiver>
     </application>
 
