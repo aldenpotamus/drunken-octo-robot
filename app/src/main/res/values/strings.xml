@@ -19,5 +19,6 @@
     <string name="site1_pref">site1_pref</string>
     <string name="site2_pref">site2_pref</string>
     <string name="site3_pref">site3_pref</string>
+    <string name="username_pref">username_pref</string>
 
 </resources>

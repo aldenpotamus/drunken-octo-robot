@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
         });
 
         ((TextView)findViewById(R.id.calendarNameStatic)).setText( getCalendarPref() );
+        ((TextView)findViewById(R.id.usernameStatic)).setText( getUsernamePref() );
         ((TextView)findViewById(R.id.reminderTime)).setText( getReminderTimePref()+"" );
         ((SeekBar)findViewById(R.id.reminderSeekBar)).setProgress( getReminderTimePref() );
 
@@ -89,6 +90,16 @@ public class MainActivity extends Activity {
     protected void setCalendarPref(String cal_name) {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.cal_name_pref), cal_name);
+        editor.commit();
+    }
+
+    protected String getUsernamePref() {
+        return sharedPref.getString(getString(R.string.username_pref), "");
+    }
+
+    protected void setUsernamePref(String cal_name) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.username_pref), cal_name);
         editor.commit();
     }
 
@@ -214,6 +225,37 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         setCalendarPref(input.getText().toString());
                         ((TextView)findViewById(R.id.calendarNameStatic)).setText(getCalendarPref());
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.show();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+        });
+
+        final Button saveUsernameButton = (Button) findViewById(R.id.saveUsername);
+        saveUsernameButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Title");
+
+                final EditText input = new EditText(MainActivity.this);
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setUsernamePref(input.getText().toString());
+                        ((TextView)findViewById(R.id.usernameStatic)).setText(getUsernamePref());
                         dialog.dismiss();
                     }
                 });
