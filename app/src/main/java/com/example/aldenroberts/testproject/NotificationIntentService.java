@@ -39,14 +39,16 @@ public class NotificationIntentService extends IntentService {
 
     public NotificationIntentService() {
         super("NotificationIntentService");
-
-        sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        this.calendarName = sharedPref.getString(getString(R.string.cal_name_pref), "");
-        this.username = sharedPref.getString(getString(R.string.username_pref), "");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        this.calendarName = sharedPref.getString(getString(R.string.cal_name_pref), "");
+        this.username = sharedPref.getString(getString(R.string.username_pref), "");
+
+        Log.d("IntentService","Starting Intent Service: "+this.calendarName+" - "+this.username);
+
         Log.d("TAG", "onHandleIntent()");
 
         if (intent != null) {
