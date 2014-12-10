@@ -54,7 +54,7 @@ public class NotificationIntentService extends IntentService {
                 CalendarEvent newEvent = CalendarEvent.createAllDayEvent(
                         BRENTS_CALENDAR_ID, title);
 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Log.d("TAG", "dtStart = " + df.format(new Date(newEvent.getDtStart())));
                 Log.d("TAG", "dtEnd = " + df.format(new Date(newEvent.getDtEnd())));
 
