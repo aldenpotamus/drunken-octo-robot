@@ -24,10 +24,10 @@ public class NotificationIntentService extends IntentService {
     private static final Integer BRENTS_CALENDAR_ID = 126;
 
     // Add an office to the appropriate calendar.
-    private static final String ACTION_ADD_OFFICE_EVENT = "com.example.aldenroberts.testproject.action.ADD_OFFICE_EVENT";
+    public static final String ACTION_ADD_OFFICE_EVENT = "com.example.aldenroberts.testproject.action.ADD_OFFICE_EVENT";
 
     // Parameters
-    private static final String PARAM_OFFICE_NAME = "com.example.aldenroberts.testproject.extra.PARAM_OFFICE_NAME";
+    public static final String PARAM_OFFICE_NAME = "com.example.aldenroberts.testproject.extra.PARAM_OFFICE_NAME";
 
     public NotificationIntentService() {
         super("NotificationIntentService");
@@ -47,9 +47,7 @@ public class NotificationIntentService extends IntentService {
 
                 // The office the user chose.
                 String officeName = intent.getStringExtra(PARAM_OFFICE_NAME);
-
-                // XXX: delete this when we actually pass this.
-                officeName = "SFO";
+                //intent.getCharSequenceExtra(PARAM_OFFICE_NAME);
 
                 String title = BRENTS_LDAP + " @ " + officeName;
 
@@ -61,7 +59,7 @@ public class NotificationIntentService extends IntentService {
                 Log.d("TAG", "dtEnd = " + df.format(new Date(newEvent.getDtEnd())));
 
                 String eventId = CalendarUtil.addEvent(NotificationIntentService.this, newEvent);
-
+//
                 Log.d("TAG", "Added " + title + " to calendar (eventId = " + eventId + " )");
 
 

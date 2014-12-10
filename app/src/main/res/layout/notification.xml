@@ -1,38 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal"
-    android:gravity="left"
-    android:focusableInTouchMode="false"
-    android:id="@+id/notificationButtonList">
+    android:layout_height="fill_parent" >
 
-    <Button
-        android:id="@+id/notification_button1"
-        android:text="X"
-        android:gravity="center_vertical"
-        android:layout_weight="1"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Where you at tomorrow?"
+        android:id="@+id/textView"
+        android:textColor="#ff000000"
+        android:paddingTop="5dp"
+        android:gravity="center" />
 
-    <Button
-        android:text="Y"
-        android:id="@+id/notification_button2"
-        android:layout_weight="1"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_width="0dp" />
+        android:orientation="horizontal"
+        android:gravity="left"
+        android:focusableInTouchMode="false"
+        android:id="@+id/notificationButtonList">
 
-    <Button
-        android:text="Z"
-        android:id="@+id/notification_button3"
-        android:layout_weight="1"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp" />
+        <Button
+            android:id="@+id/notification_button1"
+            android:text="X"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp" />
 
-    <Button
-        android:text="..."
-        android:id="@+id/notification_button4"
-        android:layout_weight="1"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp" />
+        <Button
+            android:text="Y"
+            android:id="@+id/notification_button2"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp" />
+
+        <Button
+            android:text="Z"
+            android:id="@+id/notification_button3"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp" />
+
+        <Button
+            android:text="..."
+            android:id="@+id/notification_button4"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp" />
+
+    </LinearLayout>
+
 </LinearLayout>

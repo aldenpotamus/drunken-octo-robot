@@ -67,8 +67,21 @@ public class MainActivity extends Activity {
                                   .setContent(remoteViews)
                                   .setSmallIcon(R.drawable.ic_launcher);
 
-                Intent buttonsIntent = new Intent(MainActivity.this, NotificationIntentService.class);
-                remoteViews.setOnClickPendingIntent(R.id.notification_button1, PendingIntent.getService(MainActivity.this, 0, buttonsIntent, 0));
+                Intent buttonOneIntent = new Intent(MainActivity.this, NotificationIntentService.class);
+                buttonOneIntent.putExtra(NotificationIntentService.PARAM_OFFICE_NAME, locationsAdapter.getCount() > 0 ? locationsAdapter.getItem(0) : "");
+                remoteViews.setOnClickPendingIntent(R.id.notification_button1, PendingIntent.getService(MainActivity.this, 0, buttonOneIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                Intent buttonTwoIntent = new Intent(MainActivity.this, NotificationIntentService.class);
+                buttonTwoIntent.putExtra(NotificationIntentService.PARAM_OFFICE_NAME, locationsAdapter.getCount() > 1 ? locationsAdapter.getItem(1) : "");
+                remoteViews.setOnClickPendingIntent(R.id.notification_button2, PendingIntent.getService(MainActivity.this, 1, buttonTwoIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                Intent buttonThreeIntent = new Intent(MainActivity.this, NotificationIntentService.class);
+                buttonThreeIntent.putExtra(NotificationIntentService.PARAM_OFFICE_NAME, locationsAdapter.getCount() > 2 ? locationsAdapter.getItem(2) : "");
+                remoteViews.setOnClickPendingIntent(R.id.notification_button3, PendingIntent.getService(MainActivity.this, 2, buttonThreeIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+                Intent buttonCustomIntent = new Intent(MainActivity.this, NotificationIntentService.class);
+                buttonCustomIntent.putExtra(NotificationIntentService.PARAM_OFFICE_NAME, "CUSTOM");
+                remoteViews.setOnClickPendingIntent(R.id.notification_button4, PendingIntent.getService(MainActivity.this, 3, buttonCustomIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
