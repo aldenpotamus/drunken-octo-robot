@@ -112,14 +112,6 @@ public class MainActivity extends Activity {
         editor.commit();
     }
 
-    protected void delSitePref(int pos) {
-        List<String> sites = getSitesPref();
-
-        if(pos == 0) setSitesPref(null, sites.get(1), sites.get(2));
-        if(pos == 1) setSitesPref(sites.get(0), null, sites.get(2));
-        if(pos == 2) setSitesPref(sites.get(0), sites.get(1), null);
-    }
-
     protected int getReminderTimePref() {
         return sharedPref.getInt(getString(R.string.reminder_time_pref), 18);
     }
