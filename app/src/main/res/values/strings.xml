@@ -12,5 +12,10 @@
     <string name="title_activity_notification_handler">NotificationHandler</string>
     <string name="location_notification_title_template">Location: %1$s</string>
     <string name="location_notification_placeholder_text_template">You said %1$s and lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis. Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec tortor.</string>
+    <string name="preference_file_key">prefs_file_key</string>
+    <string name="test_pref">8</string>
+    <string name="cal_name_pref">cal_name_pref</string>
+    <string name="sites_pref">sites_pref</string>
+    <string name="reminder_time_pref">reminder_time_pref</string>
 
 </resources>

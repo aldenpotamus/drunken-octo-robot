@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -20,13 +21,15 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends Activity {
+    private SharedPreferences sharedPref;
+
     private ArrayAdapter<String> locationsAdapter;
 
     private static final String TAG = "MyActivity";
@@ -43,10 +46,42 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedPref = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         locationsAdapter = new ArrayAdapter<String>(this, R.layout.location_list_item, R.id.locationName, new ArrayList<String>());
 
         buttonConfig();
     }
+
+    protected String getCalendarPref() {
+        return sharedPref.getString(getString(R.string.cal_name_pref), "");
+    }
+
+    protected void setCalendarPref(String cal_name) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.cal_name_pref), cal_name);
+        editor.commit();
+    }
+
+    protected Set<String> getSitesPref() {
+        return sharedPref.getStringSet(getString(R.string.sites_pref), null);
+    }
+
+    protected void setSitesPref(Set<String> sites) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet(getString(R.string.sites_pref), sites);
+        editor.commit();
+    }
+
+    protected int getReminderTimePref() {
+        return sharedPref.getInt(getString(R.string.reminder_time_pref), 6);
+    }
+
+    protected void setReminderTimePref(int reminderTime) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.reminder_time_pref), reminderTime);
+        editor.commit();
+    }
+
 
     protected void buttonConfig() {
         final Button createNotificationButton = (Button) findViewById(R.id.notificationButton);

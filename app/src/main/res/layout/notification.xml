@@ -6,11 +6,11 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="21dp"
         android:text="Where you at tomorrow?"
         android:id="@+id/textView"
         android:textColor="#ff000000"
-        android:paddingTop="5dp"
+        android:paddingTop="3dp"
         android:gravity="center" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
