@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        locationText = input.getText().toString();
+                        locationText = input.getText().toString().toUpperCase();
                         locationsAdapter.add(locationText);
                         dialog.dismiss();
                     }
