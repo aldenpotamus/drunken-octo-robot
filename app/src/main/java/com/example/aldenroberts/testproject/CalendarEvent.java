@@ -1,9 +1,13 @@
 package com.example.aldenroberts.testproject;
 
 import android.text.format.Time;
+import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -24,15 +28,18 @@ public class CalendarEvent {
     private Integer allDay;
 
     public static CalendarEvent createAllDayEvent(Integer calendarId, String title) {
-        Calendar cal = Calendar.getInstance(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
-        cal.set(Calendar.HOUR, 0);
+//        Calendar cal = Calendar.getInstance();
+        Calendar cal = new GregorianCalendar();
+        //Calendar cal = Calendar.getInstance(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
+        cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         long millis = cal.getTimeInMillis();
         CalendarEvent ret = new CalendarEvent(calendarId, title, millis, millis+86400000);
 
         ret.setAllDay(1);
-        ret.setEventTimezone(Time.TIMEZONE_UTC);
+        ret.setEventTimezone(TimeZone.getDefault().getID());
         return ret;
     }
 
