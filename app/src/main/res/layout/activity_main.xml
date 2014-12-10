@@ -32,15 +32,6 @@
         android:layout_height="150dp"
         android:layout_alignParentBottom="true" >
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Notification"
-            android:id="@+id/notificationButton"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
-
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="50dp">
@@ -60,8 +51,33 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="Save"
+                android:text="Calendar"
                 android:id="@+id/saveCalendar"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/usernameStatic"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical|left"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="Username"
+                android:id="@+id/saveUsername"
                 android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
@@ -86,6 +102,16 @@
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
+
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Notification"
+            android:id="@+id/notificationButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
 
     </LinearLayout>
 
