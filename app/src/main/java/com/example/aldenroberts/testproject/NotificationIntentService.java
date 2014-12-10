@@ -1,6 +1,7 @@
 package com.example.aldenroberts.testproject;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
@@ -67,6 +68,11 @@ public class NotificationIntentService extends IntentService {
                 Log.d("TAG", "Unrecognized Action You Jerk!");
             }
         }
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.cancel(1);
     }
 
 
