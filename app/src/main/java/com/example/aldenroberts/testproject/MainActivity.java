@@ -82,7 +82,6 @@ public class MainActivity extends Activity {
         editor.commit();
     }
 
-
     protected void buttonConfig() {
         final Button createNotificationButton = (Button) findViewById(R.id.notificationButton);
         createNotificationButton.setOnClickListener(new View.OnClickListener() {
