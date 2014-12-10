@@ -34,6 +34,9 @@ public class MainActivity extends Activity {
     private SharedPreferences sharedPref;
 
     private ArrayAdapter<String> locationsAdapter;
+    private ArrayList<String> mLocations;
+
+    private ListView mListView;
 
     private static final String TAG = "MyActivity";
 
@@ -50,7 +53,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         sharedPref = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        locationsAdapter = new ArrayAdapter<String>(this, R.layout.location_list_item, R.id.locationName, new ArrayList<String>());
+
+        mLocations = new ArrayList<String>();
+
+        locationsAdapter = new ArrayAdapter<String>(this, R.layout.location_list_item, R.id.locationName, mLocations);
+
         locationsAdapter.registerDataSetObserver(new DataSetObserver() {
             public void onChanged() {
                 String site1 = null;
@@ -73,9 +80,11 @@ public class MainActivity extends Activity {
 
         locationsAdapter.setNotifyOnChange(false);
 
-        for(int i = 0; i < sites.size(); i++)
-            if(sites.get(i) != null)
+        for(int i = 0; i < sites.size(); i++) {
+            if (sites.get(i) != null) {
                 locationsAdapter.add(sites.get(i));
+            }
+        }
 
         locationsAdapter.setNotifyOnChange(true);
 
@@ -126,10 +135,10 @@ public class MainActivity extends Activity {
         final Button createNotificationButton = (Button) findViewById(R.id.notificationButton);
         createNotificationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d(TAG,"Fire Zee Notifications!");
+                Log.d(TAG, "Fire Zee Notifications!");
 
                 RemoteViews remoteViews = new RemoteViews(getPackageName(),
-                                                          R.layout.notification);
+                        R.layout.notification);
 
                 remoteViews.setTextViewText(R.id.notification_button1, locationsAdapter.getCount() > 0 ? locationsAdapter.getItem(0) : "");
                 remoteViews.setTextViewText(R.id.notification_button2, locationsAdapter.getCount() > 1 ? locationsAdapter.getItem(1) : "");
@@ -138,8 +147,8 @@ public class MainActivity extends Activity {
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(MainActivity.this)
-                                  .setContent(remoteViews)
-                                  .setSmallIcon(R.drawable.ic_launcher);
+                                .setContent(remoteViews)
+                                .setSmallIcon(R.drawable.ic_launcher);
 
                 Intent buttonOneIntent = new Intent(MainActivity.this, NotificationIntentService.class);
                 buttonOneIntent.putExtra(NotificationIntentService.PARAM_OFFICE_NAME, locationsAdapter.getCount() > 0 ? locationsAdapter.getItem(0) : "");
@@ -164,8 +173,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        ListView listView = (ListView) findViewById(R.id.locationListView);
-        listView.setAdapter(locationsAdapter);
+        mListView = (ListView) findViewById(R.id.locationListView);
+        mListView.setAdapter(locationsAdapter);
 
         final Button addLocationButton = (Button) findViewById(R.id.addLocationButton);
         addLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -233,15 +242,16 @@ public class MainActivity extends Activity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ((TextView)findViewById(R.id.reminderTime)).setText( progress+"" );
+                ((TextView) findViewById(R.id.reminderTime)).setText(progress + "");
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.d("TAG", "SEEK BAR STOPPED: "+seekBar.getProgress());
+                Log.d("TAG", "SEEK BAR STOPPED: " + seekBar.getProgress());
                 setReminderTimePref(seekBar.getProgress());
             }
         });
@@ -280,5 +290,13 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onDeleteButtonClick(View view) {
+        // Clicked View is Button, its parent is the row in the list view:
+        final int position = mListView.getPositionForView((View) view.getParent());
+        mLocations.remove(position);
+
+        this.locationsAdapter.notifyDataSetChanged();
     }
 }
