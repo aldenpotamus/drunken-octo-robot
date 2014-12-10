@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RemoteViews;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,8 +51,9 @@ public class MainActivity extends Activity {
         sharedPref = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         locationsAdapter = new ArrayAdapter<String>(this, R.layout.location_list_item, R.id.locationName, new ArrayList<String>());
 
-
         ((TextView)findViewById(R.id.calendarNameStatic)).setText( getCalendarPref() );
+        ((TextView)findViewById(R.id.reminderTime)).setText( toAMPM(getReminderTimePref()) );
+        ((SeekBar)findViewById(R.id.reminderSeekBar)).setProgress( getReminderTimePref() );
 
         buttonConfig();
     }
@@ -77,7 +79,7 @@ public class MainActivity extends Activity {
     }
 
     protected int getReminderTimePref() {
-        return sharedPref.getInt(getString(R.string.reminder_time_pref), 6);
+        return sharedPref.getInt(getString(R.string.reminder_time_pref), 18);
     }
 
     protected void setReminderTimePref(int reminderTime) {
@@ -177,7 +179,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         setCalendarPref(input.getText().toString());
-                        ((TextView)findViewById(R.id.calendarNameStatic)).setText( getCalendarPref() );
+                        ((TextView)findViewById(R.id.calendarNameStatic)).setText(getCalendarPref());
                         dialog.dismiss();
                     }
                 });
@@ -192,6 +194,35 @@ public class MainActivity extends Activity {
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
         });
+
+        SeekBar sb = (SeekBar)findViewById(R.id.reminderSeekBar);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                ((TextView)findViewById(R.id.reminderTime)).setText( toAMPM(progress) );
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.d("TAG", "SEEK BAR STOPPED: "+seekBar.getProgress());
+                setReminderTimePref(seekBar.getProgress());
+            }
+        });
+    }
+
+    private String toAMPM(int time) {
+        String postfix;
+
+        if(time > 12) {
+            postfix = "PM";
+        } else {
+            postfix = "AM";
+        }
+
+        return (time % 12)+postfix;
     }
 
     @Override
