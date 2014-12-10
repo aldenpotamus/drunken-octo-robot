@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        locationsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+        locationsAdapter = new ArrayAdapter<String>(this, R.layout.location_list_item, R.id.locationName, new ArrayList<String>());
 
         buttonConfig();
     }
