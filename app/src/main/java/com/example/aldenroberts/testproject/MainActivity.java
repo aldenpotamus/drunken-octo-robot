@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -48,6 +49,9 @@ public class MainActivity extends Activity {
 
         sharedPref = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         locationsAdapter = new ArrayAdapter<String>(this, R.layout.location_list_item, R.id.locationName, new ArrayList<String>());
+
+
+        ((TextView)findViewById(R.id.calendarNameStatic)).setText( getCalendarPref() );
 
         buttonConfig();
     }
@@ -143,6 +147,37 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         locationText = input.getText().toString().toUpperCase();
                         locationsAdapter.add(locationText);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.show();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+        });
+
+        final Button saveCalendarNameButton = (Button) findViewById(R.id.saveCalendar);
+        saveCalendarNameButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Title");
+
+                final EditText input = new EditText(MainActivity.this);
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setCalendarPref(input.getText().toString());
+                        ((TextView)findViewById(R.id.calendarNameStatic)).setText( getCalendarPref() );
                         dialog.dismiss();
                     }
                 });
