@@ -2,8 +2,10 @@ package com.example.aldenroberts.testproject;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -74,6 +76,4 @@ public class NotificationIntentService extends IntentService {
 
         mNotificationManager.cancel(1);
     }
-
-
 }
