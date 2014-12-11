@@ -150,6 +150,9 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Fire Zee Notifications!");
                 CalendarNotificationManager manager = CalendarNotificationManager.getInstance();
                 Notification notification = manager.buildNotification(MainActivity.this);
+
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(1, notification);
             }
         });
 
