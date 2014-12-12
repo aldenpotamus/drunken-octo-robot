@@ -29,8 +29,48 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:layout_alignParentBottom="true" >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="Mon"
+                android:id="@+id/monButton" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="Tue"
+                android:id="@+id/tueButton" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="Wed"
+                android:id="@+id/wedButton" />
+
+            <Button
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="Thu"
+                android:id="@+id/thuButton" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="Fri"
+                android:id="@+id/friButton" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"

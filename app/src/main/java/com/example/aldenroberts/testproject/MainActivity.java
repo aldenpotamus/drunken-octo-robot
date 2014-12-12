@@ -113,6 +113,17 @@ public class MainActivity extends Activity {
         editor.commit();
     }
 
+    protected String getSchedulePref(String day) {
+        return sharedPref.getString("schedule_"+day, "");
+    }
+
+    protected void setSchedulePref(String day, String locationName) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("schedule_"+day, locationName);
+        editor.commit();
+    }
+
+
     protected List<String> getSitesPref() {
         List<String> result = new ArrayList<String>();
 
@@ -173,7 +184,7 @@ public class MainActivity extends Activity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        locationText = input.getText().toString().toUpperCase();
+                        locationText = input.getText().toString();
                         locationsAdapter.add(locationText);
                         dialog.dismiss();
                     }
@@ -199,6 +210,7 @@ public class MainActivity extends Activity {
                 final EditText input = new EditText(MainActivity.this);
 
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setText(getCalendarPref());
                 builder.setView(input);
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -230,6 +242,7 @@ public class MainActivity extends Activity {
                 final EditText input = new EditText(MainActivity.this);
 
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setText(getUsernamePref());
                 builder.setView(input);
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -251,6 +264,49 @@ public class MainActivity extends Activity {
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
         });
+
+        View.OnClickListener scheduleOnClickListner = new View.OnClickListener() {
+            public void onClick(View v) {
+                final String dayOfTheWeek = ((Button)v).getText().toString();
+
+                Log.d("TAG","View ID for this view: "+((Button)v).getText());
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Title");
+
+                final EditText input = new EditText(MainActivity.this);
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setText( getSchedulePref(dayOfTheWeek) );
+
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String locationName = input.getText().toString();
+                        setSchedulePref(dayOfTheWeek, locationName);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog dialog = builder.show();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+        };
+
+        ((Button) findViewById(R.id.monButton)).setOnClickListener(scheduleOnClickListner);
+        ((Button) findViewById(R.id.tueButton)).setOnClickListener(scheduleOnClickListner);
+        ((Button) findViewById(R.id.wedButton)).setOnClickListener(scheduleOnClickListner);
+        ((Button) findViewById(R.id.thuButton)).setOnClickListener(scheduleOnClickListner);
+        ((Button) findViewById(R.id.friButton)).setOnClickListener(scheduleOnClickListner);
+
 
         SeekBar sb = (SeekBar)findViewById(R.id.reminderSeekBar);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
