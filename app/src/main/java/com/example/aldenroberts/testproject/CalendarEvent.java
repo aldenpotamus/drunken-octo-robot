@@ -1,5 +1,7 @@
 package com.example.aldenroberts.testproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -8,6 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -27,18 +33,56 @@ public class CalendarEvent {
     private Long dtEnd;
     private Integer allDay;
 
-    public static CalendarEvent createAllDayEvent(Integer calendarId, String title) {
+    public static CalendarEvent createAllDayEvent(Integer calendarId, String title, boolean overwriteExisting, Context ctxt) {
+        return createAllDayEvent(calendarId, title, Calendar.getInstance().getTimeInMillis()+86400000, overwriteExisting, ctxt);
+    }
+
+    public static CalendarEvent createAllDayEvent(Integer calendarId, String title, long time, boolean overwriteExisting, Context ctxt) {
+        SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+/*
+        // Prefs Clear
+        SharedPreferences.Editor editor2 = sharedPref.edit();
+        editor2.putStringSet("existingManagedEvents", new HashSet<String>());
+        editor2.commit();
+*/
+        HashMap<String, String> existingManagedEvents = setToMap(sharedPref.getStringSet("existingManagedEvents", null));
+
         Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(time);
+
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
-        long millis = cal.getTimeInMillis();
-        CalendarEvent ret = new CalendarEvent(calendarId, title, millis+86400000, millis+172800000);
+        CalendarEvent ret;
 
-        ret.setAllDay(1);
-        ret.setEventTimezone(TimeZone.getDefault().getID());
+        DateFormat df = new SimpleDateFormat("E");
+
+        String key = cal.getTimeInMillis()+"";
+        String dayShort = df.format(new Date(cal.getTimeInMillis())).substring(0,3);
+
+        if( existingManagedEvents.containsKey(key) ) {
+            ret = null;
+
+            if(overwriteExisting) {
+                Log.d("TAG", "Modifying Event - " + dayShort + "(" + key + ") in "+calendarId);
+            } else {
+                Log.d("TAG", "Skipping Event - " + dayShort + "(" + key + ") in "+calendarId);
+            }
+        } else {
+            Log.d("TAG", "Creating New Event - " + dayShort + "(" + key + ") in "+calendarId);
+            ret = new CalendarEvent(calendarId, title, time, time+86400000);
+            ret.setAllDay(1);
+            ret.setEventTimezone(TimeZone.getDefault().getID());
+            existingManagedEvents.put(time+"", "eventId?");
+        }
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet("existingManagedEvents", mapToSet(existingManagedEvents));
+        editor.commit();
+
         return ret;
     }
 
@@ -112,5 +156,32 @@ public class CalendarEvent {
 
     public void setAllDay(Integer allDay) {
         this.allDay = allDay;
+    }
+
+    public static Set<String> mapToSet(HashMap<String,String> map) {
+        Set<String> result = new HashSet<String>();
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (!entry.getKey().equals("")) {
+                //Log.d("TAG", "mapToSet PUT : [" + entry.getKey() + "|" + entry.getValue() + "]");
+                result.add(entry.getKey() + "-" + entry.getValue());
+            }
+        }
+
+        return result;
+    }
+
+    public static HashMap<String, String> setToMap(Set<String> set) {
+        HashMap<String, String> result = new HashMap<String, String>();
+
+        if(set == null) return result;
+
+        for (String kvp : set) {
+            String tokens[] = kvp.split("-");
+            //Log.d("TAG", "setToMap PUT : key="+tokens[0]+" value="+tokens[1]);
+            result.put(tokens[0], tokens[1]);
+        }
+
+        return result;
     }
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -127,5 +128,40 @@ public class CalendarNotificationManager {
         DateFormat df = new SimpleDateFormat("E");
 
         return df.format(new Date(calendar.getTimeInMillis()+86400000)).substring(0,3);
+    }
+
+    public static String getDayRoot(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+
+        DateFormat df = new SimpleDateFormat("E");
+
+        return df.format(new Date(calendar.getTimeInMillis())).substring(0,3);
+    }
+
+    public static void generateEvents(boolean overwriteEvents, Context ctxt) {
+        SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String calendarNames[] = sharedPref.getString(ctxt.getString(R.string.cal_name_pref), "").split(",");
+        String username = sharedPref.getString(ctxt.getString(R.string.username_pref), "");
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set( Calendar.HOUR_OF_DAY, 0 );
+        calendar.set( Calendar.MINUTE, 0 );
+        calendar.set( Calendar.SECOND, 0 );
+        calendar.set( Calendar.MILLISECOND, 0 );
+
+        // TODO: Crank that 2 up to like 30 so that the next months is scheduled.
+        for(int i = 0; i < 2; i++) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+            if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                for (int j = 0; j < calendarNames.length; j++) {
+                    String eventLoc = sharedPref.getString("schedule_"+getDayRoot(calendar.getTimeInMillis()), "shouldn't happen");
+                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username+" @ "+eventLoc, calendar.getTimeInMillis(), overwriteEvents, ctxt);
+                    CalendarUtil.addEvent(ctxt, newEvent);
+                }
+            }
+        }
     }
 }

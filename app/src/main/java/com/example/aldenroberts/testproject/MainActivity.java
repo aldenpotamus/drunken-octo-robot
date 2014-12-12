@@ -25,6 +25,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -48,6 +49,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CalendarNotificationManager.generateEvents(false, this);
 
         sharedPref = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -273,7 +276,7 @@ public class MainActivity extends Activity {
                 final EditText input = new EditText(MainActivity.this);
 
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setText( getSchedulePref(dayOfTheWeek) );
+                input.setText(getSchedulePref(dayOfTheWeek));
 
                 builder.setView(input);
 

@@ -55,6 +55,8 @@ public class CalendarUtil {
     }
 
     public static String addEvent(Context ctxt, CalendarEvent event) {
+        if(event == null) return null;
+
         ContentResolver cr = ctxt.getContentResolver();
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, event.getDtStart());
@@ -69,6 +71,12 @@ public class CalendarUtil {
         // Retrieve ID for new event
         String eventID = uri.getLastPathSegment();
         return eventID;
+    }
+
+    public static CalendarEvent getCalendarEventById(String calendarName, String eventid, Context ctxt) {
+        //int calendarId = CalendarUtil.getCalendarIdByName(calendarName, ctxt);
+
+        return null;
     }
 
 }
