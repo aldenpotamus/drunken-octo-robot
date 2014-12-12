@@ -46,41 +46,43 @@ public class NotificationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        this.calendarName = sharedPref.getString(getString(R.string.cal_name_pref), "");
+        String calendarNames[] = sharedPref.getString(getString(R.string.cal_name_pref), "").split(",");
         this.username = sharedPref.getString(getString(R.string.username_pref), "");
 
         Log.d("IntentService","Starting Intent Service: "+this.calendarName+" - "+this.username);
 
         Log.d("TAG", "onHandleIntent()");
 
-        if (intent != null) {
-            String action = intent.getAction();
+        for(int i = 0; i < calendarNames.length; i++) {
+            if (intent != null) {
+                String action = intent.getAction();
 
-            // XXX: delete this when we actually pass this.
-            action = ACTION_ADD_OFFICE_EVENT;
+                // XXX: delete this when we actually pass this.
+                action = ACTION_ADD_OFFICE_EVENT;
 
-            if (ACTION_ADD_OFFICE_EVENT.equals(action)) {
+                if (ACTION_ADD_OFFICE_EVENT.equals(action)) {
 
-                // The office the user chose.
-                String officeName = intent.getStringExtra(PARAM_OFFICE_NAME);
-                //intent.getCharSequenceExtra(PARAM_OFFICE_NAME);
+                    // The office the user chose.
+                    String officeName = intent.getStringExtra(PARAM_OFFICE_NAME);
+                    //intent.getCharSequenceExtra(PARAM_OFFICE_NAME);
 
-                String title = this.username + " @ " + officeName;
+                    String title = this.username + " @ " + officeName;
 
-                CalendarEvent newEvent = CalendarEvent.createAllDayEvent(
-                        CalendarUtil.getCalendarIdByName(this.calendarName, NotificationIntentService.this), title);
+                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(
+                            CalendarUtil.getCalendarIdByName(this.calendarName, NotificationIntentService.this), title);
 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Log.d("TAG", "dtStart = " + df.format(new Date(newEvent.getDtStart())));
-                Log.d("TAG", "dtEnd = " + df.format(new Date(newEvent.getDtEnd())));
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Log.d("TAG", "dtStart = " + df.format(new Date(newEvent.getDtStart())));
+                    Log.d("TAG", "dtEnd = " + df.format(new Date(newEvent.getDtEnd())));
 
-                String eventId = CalendarUtil.addEvent(NotificationIntentService.this, newEvent);
-//
-                Log.d("TAG", "Added " + title + " to calendar (eventId = " + eventId + " )");
+                    String eventId = CalendarUtil.addEvent(NotificationIntentService.this, newEvent);
+                    //
+                    Log.d("TAG", "Added " + title + " to calendar (eventId = " + eventId + " )");
 
 
-            } else  {
-                Log.d("TAG", "Unrecognized Action You Jerk!");
+                } else {
+                    Log.d("TAG", "Unrecognized Action You Jerk!");
+                }
             }
         }
 
