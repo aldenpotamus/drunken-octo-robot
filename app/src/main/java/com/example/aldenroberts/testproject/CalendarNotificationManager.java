@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -75,9 +76,17 @@ public class CalendarNotificationManager {
         String site2 = sharedPreferences.getString(context.getString(R.string.site2_pref), "");
         String site3 = sharedPreferences.getString(context.getString(R.string.site3_pref), "");
 
+        String tomorrowSite = sharedPreferences.getString("schedule_"+getTomorrowRoot(), "");
+
         remoteViews.setTextViewText(R.id.notification_button1, site1);
+        if( site1.equals(tomorrowSite) ) remoteViews.setTextColor(R.id.notification_button1, Color.GREEN);
+
         remoteViews.setTextViewText(R.id.notification_button2, site2);
+        if( site2.equals(tomorrowSite) ) remoteViews.setTextColor(R.id.notification_button2, Color.GREEN);
+
         remoteViews.setTextViewText(R.id.notification_button3, site3);
+        if( site3.equals(tomorrowSite) ) remoteViews.setTextColor(R.id.notification_button3, Color.GREEN);
+
         remoteViews.setTextViewText(R.id.notification_button4, "...");
 
         NotificationCompat.Builder mBuilder =
@@ -102,5 +111,21 @@ public class CalendarNotificationManager {
         remoteViews.setOnClickPendingIntent(R.id.notification_button4, PendingIntent.getService(context, 3, buttonCustomIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         return mBuilder.build();
+    }
+
+    public static String getTodayRoot() {
+        Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("E");
+
+        return df.format(new Date(calendar.getTimeInMillis())).substring(0,3);
+    }
+
+    public static String getTomorrowRoot() {
+        Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("E");
+
+        return df.format(new Date(calendar.getTimeInMillis()+86400000)).substring(0,3);
     }
 }
