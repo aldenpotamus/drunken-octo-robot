@@ -28,13 +28,12 @@ public class CalendarEvent {
     private Integer allDay;
 
     public static CalendarEvent createAllDayEvent(Integer calendarId, String title) {
-//        Calendar cal = Calendar.getInstance();
         Calendar cal = new GregorianCalendar();
-        //Calendar cal = Calendar.getInstance(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+
         long millis = cal.getTimeInMillis();
         CalendarEvent ret = new CalendarEvent(calendarId, title, millis+86400000, millis+172800000);
 

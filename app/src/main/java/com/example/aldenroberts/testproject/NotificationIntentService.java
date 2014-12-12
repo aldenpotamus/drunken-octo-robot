@@ -68,8 +68,7 @@ public class NotificationIntentService extends IntentService {
 
                     String title = this.username + " @ " + officeName;
 
-                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(
-                            CalendarUtil.getCalendarIdByName(this.calendarName, NotificationIntentService.this), title);
+                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(this.calendarName, NotificationIntentService.this), title);
 
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Log.d("TAG", "dtStart = " + df.format(new Date(newEvent.getDtStart())));
