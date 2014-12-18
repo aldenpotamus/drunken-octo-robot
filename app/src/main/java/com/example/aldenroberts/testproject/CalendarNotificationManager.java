@@ -152,7 +152,7 @@ public class CalendarNotificationManager {
         calendar.set( Calendar.MILLISECOND, 0 );
 
         // TODO: Crank that 2 up to like 30 so that the next months is scheduled.
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < 15; i++) {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
 
             if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
