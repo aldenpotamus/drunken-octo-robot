@@ -113,10 +113,13 @@ public class CalendarUtil {
 
         Log.d("TAG", "NUMBER OF RESULTS "+mCursor.getCount());
 
-        mCursor.moveToFirst();
+        if(mCursor.getCount() > 0) {
+            mCursor.moveToFirst();
+            return new CalendarEvent(eventURI, mCursor.getInt(1), mCursor.getString(2)+"", mCursor.getLong(3), mCursor.getLong(4));
+        }
 
-        Log.d("TAG", mCursor.getInt(0)+" - "+mCursor.getInt(1)+" - "+mCursor.getString(2)+" - "+mCursor.getLong(3)+" - "+mCursor.getLong(4));
-        return new CalendarEvent(eventURI, mCursor.getInt(1), mCursor.getString(2)+"", mCursor.getLong(3), mCursor.getLong(4));
+        Log.d("TAG", "Event Not Found!");
+        return null;
     }
 
 }

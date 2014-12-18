@@ -152,13 +152,14 @@ public class CalendarNotificationManager {
         calendar.set( Calendar.MILLISECOND, 0 );
 
         // TODO: Crank that 2 up to like 30 so that the next months is scheduled.
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 6; i++) {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
 
             if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 for (int j = 0; j < calendarNames.length; j++) {
                     String eventLoc = sharedPref.getString("schedule_"+getDayRoot(calendar.getTimeInMillis()), "shouldn't happen");
-                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username+" @ "+eventLoc, calendar.getTimeInMillis(), overwriteEvents, ctxt);
+                    if(!eventLoc.equals(""))
+                        CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username+" @ "+eventLoc, calendar.getTimeInMillis(), overwriteEvents, ctxt);
                 }
             }
         }

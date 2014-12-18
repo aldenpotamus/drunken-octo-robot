@@ -50,7 +50,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //CalendarNotificationManager.generateEvents(false, this);
+/*
+        // Prefs Clear
+        SharedPreferences.Editor editor2 = sharedPref.edit();
+        editor2.putStringSet("existingManagedEvents", new HashSet<String>());
+        editor2.commit();
+*/
+
+        CalendarNotificationManager.generateEvents(false, this);
 
         sharedPref = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 

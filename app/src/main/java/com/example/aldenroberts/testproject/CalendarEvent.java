@@ -49,14 +49,6 @@ public class CalendarEvent {
     public static CalendarEvent createAllDayEvent(Integer calendarId, String title, long time, boolean overwriteExisting, Context ctxt) {
         SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-/*
-        // Prefs Clear
-        SharedPreferences.Editor editor2 = sharedPref.edit();
-        editor2.putStringSet("existingManagedEvents", new HashSet<String>());
-        editor2.commit();
-*/
-
-
         HashMap<String, String> existingManagedEvents = setToMap(sharedPref.getStringSet("existingManagedEvents", null));
 
         Calendar cal = new GregorianCalendar();
@@ -76,26 +68,35 @@ public class CalendarEvent {
 
         if( existingManagedEvents.containsKey(key) ) {
             ret = CalendarUtil.getCalendarEventById(Uri.parse(existingManagedEvents.get(key)), ctxt);
-            Log.d("EXISTING EVENT: ", ret.getEventId()+" - "+ret.getTitle());
 
-            if(overwriteExisting) {
-                Log.d("TAG", "Modifying Event ["+existingManagedEvents.get(key)+"] - " + dayShort + "(" + key + ") in "+calendarId);
-                ret.setTitle(title);
-                CalendarUtil.updateEvent(ctxt, ret);
+            if(ret != null) {
+                Log.d("EXISTING EVENT: ", ret.getEventId() + " - " + ret.getTitle());
+
+                if (overwriteExisting) {
+                    Log.d("TAG", "Modifying Event [" + existingManagedEvents.get(key) + "] - " + dayShort + "(" + key + ") in " + calendarId);
+                    ret.setTitle(title);
+                    CalendarUtil.updateEvent(ctxt, ret);
+                } else {
+                    Log.d("TAG", "Skipping Event - [" + existingManagedEvents.get(key) + "] " + dayShort + "(" + key + ") in " + calendarId);
+                }
+
+                return ret;
             } else {
-                Log.d("TAG", "Skipping Event - ["+existingManagedEvents.get(key)+"] " + dayShort + "(" + key + ") in "+calendarId);
+                Log.d("TAG", "Event Not Found Removing From Existing Map");
+                existingManagedEvents.remove(key);
             }
-        } else {
-            ret = new CalendarEvent(calendarId, title, time, time+86400000);
-            ret.setAllDay(1);
-            ret.setEventTimezone(TimeZone.getDefault().getID());
-
-            String eventUri = CalendarUtil.addEvent(ctxt, ret);
-
-            Log.d("TAG", "Creating New Event ["+eventUri+"] - " + dayShort + "(" + key + ") in "+calendarId);
-
-            existingManagedEvents.put(time+"", eventUri);
         }
+
+        // Create New Event
+        ret = new CalendarEvent(calendarId, title, time, time+86400000);
+        ret.setAllDay(1);
+        ret.setEventTimezone(TimeZone.getDefault().getID());
+
+        String eventUri = CalendarUtil.addEvent(ctxt, ret);
+
+        Log.d("TAG", "Creating New Event ["+eventUri+"] - " + dayShort + "(" + key + ") in "+calendarId);
+
+        existingManagedEvents.put(time+"", eventUri);
 
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putStringSet("existingManagedEvents", mapToSet(existingManagedEvents));
