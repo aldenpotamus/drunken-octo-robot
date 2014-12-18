@@ -20,6 +20,18 @@ import java.util.TimeZone;
  */
 public class CalendarUtil {
 
+    private static final String[] EVENT_COLS = new String[] {
+            CalendarContract.Events._ID,
+            CalendarContract.Events.CALENDAR_ID,
+            CalendarContract.Events.TITLE,
+            CalendarContract.Events.DTSTART,
+            CalendarContract.Events.DTEND
+    };
+
+    private static final String[] EVENT_UPDATE_COLS = new String[] {
+            CalendarContract.Events.TITLE
+    };
+
     private static final String[] CALENDAR_COLS = new String[] {
             CalendarContract.Calendars._ID,
             CalendarContract.Calendars.NAME,
@@ -69,14 +81,42 @@ public class CalendarUtil {
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
         // Retrieve ID for new event
-        String eventID = uri.getLastPathSegment();
-        return eventID;
+        //String eventID = uri.getLastPathSegment();
+        return uri.toString();
     }
 
-    public static CalendarEvent getCalendarEventById(String calendarName, String eventid, Context ctxt) {
-        //int calendarId = CalendarUtil.getCalendarIdByName(calendarName, ctxt);
+    public static String updateEvent(Context ctxt, CalendarEvent event) {
+        if(event == null) return null;
 
-        return null;
+        ContentResolver cr = ctxt.getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.TITLE, event.getTitle());
+        values.put(CalendarContract.Events.DESCRIPTION, event.getDescription());
+        values.put(CalendarContract.Events.CALENDAR_ID, event.getCalendarId());
+        cr.update(event.getEventUri(), values, null, null);
+
+        // Retrieve ID for new event
+        return event.getEventUri().toString();
+    }
+
+    public static CalendarEvent getCalendarEventById(Uri eventURI, Context ctxt) {
+        Log.d("TAG", "LOOKING FOR "+eventURI);
+
+        ContentResolver cr = ctxt.getContentResolver();
+
+        Cursor mCursor = null;
+
+        String query = CalendarContract.Events._ID+" IN ( ? )";
+        String[] queryArgs = new String[]{ eventURI.getLastPathSegment() };
+
+        mCursor = cr.query(CalendarContract.Events.CONTENT_URI, EVENT_COLS, query, queryArgs , null);
+
+        Log.d("TAG", "NUMBER OF RESULTS "+mCursor.getCount());
+
+        mCursor.moveToFirst();
+
+        Log.d("TAG", mCursor.getInt(0)+" - "+mCursor.getInt(1)+" - "+mCursor.getString(2)+" - "+mCursor.getLong(3)+" - "+mCursor.getLong(4));
+        return new CalendarEvent(eventURI, mCursor.getInt(1), mCursor.getString(2)+"", mCursor.getLong(3), mCursor.getLong(4));
     }
 
 }

@@ -159,7 +159,6 @@ public class CalendarNotificationManager {
                 for (int j = 0; j < calendarNames.length; j++) {
                     String eventLoc = sharedPref.getString("schedule_"+getDayRoot(calendar.getTimeInMillis()), "shouldn't happen");
                     CalendarEvent newEvent = CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username+" @ "+eventLoc, calendar.getTimeInMillis(), overwriteEvents, ctxt);
-                    CalendarUtil.addEvent(ctxt, newEvent);
                 }
             }
         }

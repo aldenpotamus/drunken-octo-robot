@@ -68,15 +68,11 @@ public class NotificationIntentService extends IntentService {
 
                     String title = this.username + " @ " + officeName;
 
-                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(this.calendarName, NotificationIntentService.this), title, true, NotificationIntentService.this);
+                    CalendarEvent newEvent = CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[i], NotificationIntentService.this), title, true, NotificationIntentService.this);
 
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Log.d("TAG", "dtStart = " + df.format(new Date(newEvent.getDtStart())));
                     Log.d("TAG", "dtEnd = " + df.format(new Date(newEvent.getDtEnd())));
-
-                    String eventId = CalendarUtil.addEvent(NotificationIntentService.this, newEvent);
-                    //
-                    Log.d("TAG", "Added " + title + " to calendar (eventId = " + eventId + " )");
 
 
                 } else {

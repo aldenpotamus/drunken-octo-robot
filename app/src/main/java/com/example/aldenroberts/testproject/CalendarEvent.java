@@ -2,6 +2,7 @@ package com.example.aldenroberts.testproject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -32,9 +33,17 @@ public class CalendarEvent {
     private Long dtStart;
     private Long dtEnd;
     private Integer allDay;
+    private Uri uri;
 
     public static CalendarEvent createAllDayEvent(Integer calendarId, String title, boolean overwriteExisting, Context ctxt) {
-        return createAllDayEvent(calendarId, title, Calendar.getInstance().getTimeInMillis()+86400000, overwriteExisting, ctxt);
+        Calendar cal = new GregorianCalendar();
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        return createAllDayEvent(calendarId, title, cal.getTimeInMillis()+86400000, overwriteExisting, ctxt);
     }
 
     public static CalendarEvent createAllDayEvent(Integer calendarId, String title, long time, boolean overwriteExisting, Context ctxt) {
@@ -46,6 +55,8 @@ public class CalendarEvent {
         editor2.putStringSet("existingManagedEvents", new HashSet<String>());
         editor2.commit();
 */
+
+
         HashMap<String, String> existingManagedEvents = setToMap(sharedPref.getStringSet("existingManagedEvents", null));
 
         Calendar cal = new GregorianCalendar();
@@ -64,19 +75,26 @@ public class CalendarEvent {
         String dayShort = df.format(new Date(cal.getTimeInMillis())).substring(0,3);
 
         if( existingManagedEvents.containsKey(key) ) {
-            ret = null;
+            ret = CalendarUtil.getCalendarEventById(Uri.parse(existingManagedEvents.get(key)), ctxt);
+            Log.d("EXISTING EVENT: ", ret.getEventId()+" - "+ret.getTitle());
 
             if(overwriteExisting) {
-                Log.d("TAG", "Modifying Event - " + dayShort + "(" + key + ") in "+calendarId);
+                Log.d("TAG", "Modifying Event ["+existingManagedEvents.get(key)+"] - " + dayShort + "(" + key + ") in "+calendarId);
+                ret.setTitle(title);
+                CalendarUtil.updateEvent(ctxt, ret);
             } else {
-                Log.d("TAG", "Skipping Event - " + dayShort + "(" + key + ") in "+calendarId);
+                Log.d("TAG", "Skipping Event - ["+existingManagedEvents.get(key)+"] " + dayShort + "(" + key + ") in "+calendarId);
             }
         } else {
-            Log.d("TAG", "Creating New Event - " + dayShort + "(" + key + ") in "+calendarId);
             ret = new CalendarEvent(calendarId, title, time, time+86400000);
             ret.setAllDay(1);
             ret.setEventTimezone(TimeZone.getDefault().getID());
-            existingManagedEvents.put(time+"", "eventId?");
+
+            String eventUri = CalendarUtil.addEvent(ctxt, ret);
+
+            Log.d("TAG", "Creating New Event ["+eventUri+"] - " + dayShort + "(" + key + ") in "+calendarId);
+
+            existingManagedEvents.put(time+"", eventUri);
         }
 
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -86,12 +104,33 @@ public class CalendarEvent {
         return ret;
     }
 
+    public CalendarEvent(Uri eventUri, Integer calendarId, String title, Long dtStart, Long dtEnd) {
+        setEventUri(eventUri);
+        setCalendarId(calendarId);
+        setTitle(title);
+        setDtStart(dtStart);
+        setDtEnd(dtEnd);
+        setEventTimezone(TimeZone.getDefault().getID());
+    }
+
     public CalendarEvent(Integer calendarId, String title, Long dtStart, Long dtEnd) {
         setCalendarId(calendarId);
         setTitle(title);
         setDtStart(dtStart);
         setDtEnd(dtEnd);
         setEventTimezone(TimeZone.getDefault().getID());
+    }
+
+    public Integer getEventId() {
+        return Integer.parseInt(uri.getLastPathSegment());
+    }
+
+    public Uri getEventUri() {
+        return uri;
+    }
+
+    public void setEventUri(Uri eventUri) {
+        this.uri = eventUri;
     }
 
     public Integer getCalendarId() {
