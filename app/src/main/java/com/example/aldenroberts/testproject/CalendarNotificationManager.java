@@ -22,6 +22,7 @@ import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jamesknight on 12/10/14.
@@ -143,6 +144,7 @@ public class CalendarNotificationManager {
         SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String calendarNames[] = sharedPref.getString(ctxt.getString(R.string.cal_name_pref), "").split(",");
         String username = sharedPref.getString(ctxt.getString(R.string.username_pref), "");
+        Map<String, String> schedule = getScheduleAsMap(ctxt);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -157,11 +159,59 @@ public class CalendarNotificationManager {
 
             if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 for (int j = 0; j < calendarNames.length; j++) {
-                    String eventLoc = sharedPref.getString("schedule_"+getDayRoot(calendar.getTimeInMillis()), "shouldn't happen");
+                    String eventLoc = schedule.get("schedule_"+getDayRoot(calendar.getTimeInMillis()));
+
                     if(!eventLoc.equals(""))
                         CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username+" @ "+eventLoc, calendar.getTimeInMillis(), overwriteEvents, ctxt);
                 }
             }
         }
+    }
+
+    public static void refreshEvents(Map<String, String> oldEvents, Context ctxt) {
+        SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String calendarNames[] = sharedPref.getString(ctxt.getString(R.string.cal_name_pref), "").split(",");
+        String username = sharedPref.getString(ctxt.getString(R.string.username_pref), "");
+        Map<String, String> schedule = getScheduleAsMap(ctxt);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set( Calendar.HOUR_OF_DAY, 0 );
+        calendar.set( Calendar.MINUTE, 0 );
+        calendar.set( Calendar.SECOND, 0 );
+        calendar.set( Calendar.MILLISECOND, 0 );
+
+        for(int i = 0; i < 15; i++) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                for (int j = 0; j < calendarNames.length; j++) {
+                    String key = "schedule_"+getDayRoot(calendar.getTimeInMillis());
+                    String eventLoc = schedule.get(key);
+
+                    CalendarEvent ce = CalendarUtil.getCalendarEventByTime(calendar.getTimeInMillis(), ctxt);
+                    String currentCalLoc = ce.getTitle().split(" @ ")[1];
+
+                    Log.d("TAG", "[Key]"+key+" [EventLoc]"+eventLoc+" [CalLoc]"+currentCalLoc );
+
+                    if(currentCalLoc.equals(oldEvents.get(key)))
+                        CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username + " @ " + eventLoc, calendar.getTimeInMillis(), true, ctxt);
+                }
+            }
+
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+    }
+
+    public static Map<String, String> getScheduleAsMap(Context ctxt) {
+        Map<String, String> result = new HashMap<String, String>();
+
+        SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        result.put("schedule_Mon", sharedPref.getString("schedule_Mon", "shouldn't happen"));
+        result.put("schedule_Tue", sharedPref.getString("schedule_Tue", "shouldn't happen"));
+        result.put("schedule_Wed", sharedPref.getString("schedule_Wed", "shouldn't happen"));
+        result.put("schedule_Thu", sharedPref.getString("schedule_Thu", "shouldn't happen"));
+        result.put("schedule_Fri", sharedPref.getString("schedule_Fri", "shouldn't happen"));
+
+        return result;
     }
 }

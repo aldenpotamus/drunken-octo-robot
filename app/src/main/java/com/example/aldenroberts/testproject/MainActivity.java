@@ -27,6 +27,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends Activity {
     private SharedPreferences sharedPref;
@@ -290,8 +291,13 @@ public class MainActivity extends Activity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Map<String, String> oldEvents = CalendarNotificationManager.getScheduleAsMap(MainActivity.this);
+
                         String locationName = input.getText().toString();
                         setSchedulePref(dayOfTheWeek, locationName);
+
+                        CalendarNotificationManager.refreshEvents(oldEvents, MainActivity.this);
+
                         dialog.dismiss();
                     }
                 });

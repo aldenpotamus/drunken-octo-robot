@@ -3,6 +3,7 @@ package com.example.aldenroberts.testproject;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -12,6 +13,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -120,6 +122,18 @@ public class CalendarUtil {
 
         Log.d("TAG", "Event Not Found!");
         return null;
+    }
+
+    public static CalendarEvent getCalendarEventByTime(long time, Context ctxt) {
+        SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        HashMap<String, String> existingManagedEvents = CalendarEvent.setToMap(sharedPref.getStringSet("existingManagedEvents", null));
+
+        Uri calendarEventUri = Uri.parse(existingManagedEvents.get(time+""));
+
+        Log.d("TAG", "LOOKING FOR EVENT @"+time);
+
+        return getCalendarEventById(calendarEventUri, ctxt);
     }
 
 }
