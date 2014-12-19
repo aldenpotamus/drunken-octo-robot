@@ -129,6 +129,9 @@ public class CalendarUtil {
 
         HashMap<String, String> existingManagedEvents = CalendarEvent.setToMap(sharedPref.getStringSet("existingManagedEvents", null));
 
+        if(!existingManagedEvents.containsKey(time+""))
+            return null;
+
         Uri calendarEventUri = Uri.parse(existingManagedEvents.get(time+""));
 
         Log.d("TAG", "LOOKING FOR EVENT @"+time);

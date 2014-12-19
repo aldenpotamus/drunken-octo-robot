@@ -161,7 +161,7 @@ public class CalendarNotificationManager {
                 for (int j = 0; j < calendarNames.length; j++) {
                     String eventLoc = schedule.get("schedule_"+getDayRoot(calendar.getTimeInMillis()));
 
-                    if(!eventLoc.equals(""))
+                    if(eventLoc != null && !eventLoc.equals(""))
                         CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username+" @ "+eventLoc, calendar.getTimeInMillis(), overwriteEvents, ctxt);
                 }
             }
@@ -188,12 +188,15 @@ public class CalendarNotificationManager {
                     String eventLoc = schedule.get(key);
 
                     CalendarEvent ce = CalendarUtil.getCalendarEventByTime(calendar.getTimeInMillis(), ctxt);
-                    String currentCalLoc = ce.getTitle().split(" @ ")[1];
+                    String currentCalLoc = null;
+                    if(ce != null)
+                        currentCalLoc = ce.getTitle().split(" @ ")[1];
 
                     Log.d("TAG", "[Key]"+key+" [EventLoc]"+eventLoc+" [CalLoc]"+currentCalLoc );
 
-                    if(currentCalLoc.equals(oldEvents.get(key)))
-                        CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username + " @ " + eventLoc, calendar.getTimeInMillis(), true, ctxt);
+                    if(currentCalLoc == null || currentCalLoc.equals(oldEvents.get(key)))
+                        if(eventLoc != null && !eventLoc.equals(""))
+                            CalendarEvent.createAllDayEvent(CalendarUtil.getCalendarIdByName(calendarNames[j], ctxt), username + " @ " + eventLoc, calendar.getTimeInMillis(), true, ctxt);
                 }
             }
 
@@ -206,11 +209,11 @@ public class CalendarNotificationManager {
 
         SharedPreferences sharedPref = ctxt.getSharedPreferences(ctxt.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        result.put("schedule_Mon", sharedPref.getString("schedule_Mon", "shouldn't happen"));
-        result.put("schedule_Tue", sharedPref.getString("schedule_Tue", "shouldn't happen"));
-        result.put("schedule_Wed", sharedPref.getString("schedule_Wed", "shouldn't happen"));
-        result.put("schedule_Thu", sharedPref.getString("schedule_Thu", "shouldn't happen"));
-        result.put("schedule_Fri", sharedPref.getString("schedule_Fri", "shouldn't happen"));
+        result.put("schedule_Mon", sharedPref.getString("schedule_Mon", null));
+        result.put("schedule_Tue", sharedPref.getString("schedule_Tue", null));
+        result.put("schedule_Wed", sharedPref.getString("schedule_Wed", null));
+        result.put("schedule_Thu", sharedPref.getString("schedule_Thu", null));
+        result.put("schedule_Fri", sharedPref.getString("schedule_Fri", null));
 
         return result;
     }
